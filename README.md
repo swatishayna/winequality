@@ -8,4 +8,5 @@
 6. make  template.py file
    
 ``` manualy fetch and put inside data _given folder```
+
 7. Put fetched data inside data_given folder
