@@ -2,7 +2,7 @@ import yaml
 from flask import Flask, render_template, request, jsonify
 import os
 import numpy as np
-from prediction_service import prediction
+
 import joblib
 
 params_path = "params.yaml"
@@ -17,6 +17,7 @@ def read_params(config_path):
     with open(config_path) as yaml_file:
         config = yaml.safe_load(yaml_file)
     return config
+
 def predict(data):
     config = read_params(params_path)
     model_dir_path = config["webapp_model_dir"]
@@ -26,7 +27,14 @@ def predict(data):
     return prediction[0]
 
 def api_response(request):
-    pass
+    try:
+        data = np.array([list(request.json.values())])
+        response = predict(data)
+        response = {"response": response}
+        return response
+    except Exception as e:
+        error = {"error": "Something went wrong!! Try again later!"}
+        return error
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -35,7 +43,7 @@ def index():
         try:
             if request.form:
                 data = dict(request.form).values()
-                data = [list(map(float,data))]
+                data = [list(map(float, data))]
                 response = predict(data)
                 return render_template("index.html", response=response)
             elif request.json:
@@ -45,8 +53,6 @@ def index():
         except Exception as e:
             print(e)
             error = {"error": "Something went wrong!! Try again later!"}
-            error = {"error": e}
-
             return render_template("404.html", error=error)
     else:
         return render_template("index.html")
