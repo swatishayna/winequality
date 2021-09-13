@@ -1,13 +1,11 @@
 import os
 
-
-
 dirs = [
-   os.path.join( "data","raw"),
-    os.path.join("data","processed"),
-    "notebooks",
-    "saved_models",
-    "src"
+   os.path.join("data", "raw"),
+   os.path.join("data", "processed"),
+   "notebooks",
+   "saved_models",
+   "src"
 ]
 for dir in dirs:
     os.mkdir(dir)
